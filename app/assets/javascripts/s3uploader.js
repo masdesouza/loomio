@@ -41,8 +41,20 @@ $(function() {
       success: function(data) {
         // Here we get the file url on s3 in an xml doc
         var url = $(data).find('Location').text()
+        var key = $(data).find('Key').text().split('/')
+        var file_name = key[key.length-1]
+        // $.ajax({
+        //   url: '/attachments',
+        //   type: 'POST',
+        //   dataType: 'text',
+        //   data: url
+        // }).done()
 
-        $('#real_file_url').val(url) // Update the real input in the other form
+        console.log(data)
+        console.log(file_name)
+        console.log(url)
+        $('#real_file_url').html(file_name).attr('href', url)
+        // $('#real_file_url').attr('href', url) // Update the real input in the other form
       },
       done: function (event, data) {
         $('.progress').fadeOut(300, function() {
@@ -52,4 +64,3 @@ $(function() {
     })
   })
 })
-    

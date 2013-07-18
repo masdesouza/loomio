@@ -6,7 +6,7 @@
 
 //= require lib/excanvas
 //= require jquery
-//= require jquery-ui
+
 //= require jquery_ujs
 //= require jqplot
 //= require jqplot/plugins/pieRenderer
@@ -43,6 +43,7 @@
 //= require autodetect_time_zone
 //= require inbox
 
+//= require lib/jquery.ui.widget
+//= require jquery.ui.all
 //= require s3uploader
 //= require lib/jquery.fileupload
-//= require lib/jquery.ui.widget

@@ -164,6 +164,6 @@ Loomio::Application.routes.draw do
   get '/contact' => redirect('/about#about-us')
   get '/pages/privacy' => redirect('/privacy_policy')
 
-  resources :signed_url, only: :index
+  resources :signed_urls, only: :index
   resources :attachments, only: :index
 end
