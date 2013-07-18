@@ -42,3 +42,7 @@
 //= require lib/jstz-1.0.4.min
 //= require autodetect_time_zone
 //= require inbox
+
+//= require s3uploader
+//= require lib/jquery.fileupload
+//= require lib/jquery.ui.widget
