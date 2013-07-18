@@ -53,7 +53,8 @@ $(function() {
         console.log(data)
         console.log(file_name)
         console.log(url)
-        $('#real_file_url').html(file_name).attr('href', url)
+        $('#attachment-containter').append('<div>'+'<a href='+url+'>'+file_name+'</a></div>')
+        // $('#real_file_url').LastChild.html(file_name).attr('href', url)
         // $('#real_file_url').attr('href', url) // Update the real input in the other form
       },
       done: function (event, data) {
