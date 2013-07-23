@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130625050817) do
+ActiveRecord::Schema.define(:version => 20130629092802) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -323,20 +323,20 @@ ActiveRecord::Schema.define(:version => 20130625050817) do
     t.integer  "author_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "phase",               :default => "voting", :null => false
-    t.string   "discussion_url",      :default => "",       :null => false
-    t.datetime "close_at"
+    t.string   "discussion_url",      :default => "",   :null => false
+    t.datetime "closed_at"
     t.integer  "discussion_id"
     t.string   "outcome"
     t.datetime "last_vote_at"
-    t.boolean  "uses_markdown",       :default => true,     :null => false
+    t.boolean  "uses_markdown",       :default => true, :null => false
     t.date     "close_at_date"
     t.string   "close_at_time"
     t.string   "close_at_time_zone"
-    t.integer  "yes_votes_count",     :default => 0,        :null => false
-    t.integer  "no_votes_count",      :default => 0,        :null => false
-    t.integer  "abstain_votes_count", :default => 0,        :null => false
-    t.integer  "block_votes_count",   :default => 0,        :null => false
+    t.integer  "yes_votes_count",     :default => 0,    :null => false
+    t.integer  "no_votes_count",      :default => 0,    :null => false
+    t.integer  "abstain_votes_count", :default => 0,    :null => false
+    t.integer  "block_votes_count",   :default => 0,    :null => false
+    t.datetime "closing_at"
   end
 
   add_index "motions", ["author_id"], :name => "index_motions_on_author_id"
