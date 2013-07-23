@@ -42,7 +42,7 @@ $(function() {
         // Here we get the file url on s3 in an xml doc
         var url = $(data).find('Location').text()
         var key = $(data).find('Key').text().split('/')
-        var file_name = key[key.length-1]
+        var file_name = key[key.length-1] // the file name should be set before progress bar starts, so we can see what is being moved.
         // $.ajax({
         //   url: '/attachments',
         //   type: 'POST',
@@ -53,7 +53,7 @@ $(function() {
         console.log(data)
         console.log(file_name)
         console.log(url)
-        $('#attachment-containter').append('<div>'+'<a href='+url+'>'+file_name+'</a></div>')
+        $('#attachment-container').append('<div>'+'<a href='+url+'>'+file_name+'</a></div>')
         // $('#real_file_url').LastChild.html(file_name).attr('href', url)
         // $('#real_file_url').attr('href', url) // Update the real input in the other form
       },

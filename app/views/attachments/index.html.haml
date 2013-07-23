@@ -1,14 +1,18 @@
-%form(action="https://#{ENV['S3_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" class='direct-upload')
-  %input{type: :hidden, name: :key}
-  %input{type: :hidden, name: "AWSAccessKeyId", value: ENV['AWS_ACCESS_KEY_ID']}
-  %input{type: :hidden, name: :acl, value: 'public-read'}
-  %input{type: :hidden, name: :policy}
-  %input{type: :hidden, name: :signature}
-  %input{type: :hidden, name: :success_action_status, value: "201"}
+/ =form_tag "https://#{ENV['S3_BUCKET']}.s3.amazonaws.com", multipart: true, class:'direct-upload' do
+/ -some problem with accept-charset here
 
-  %input{type: :file, name: :file }
-  - # You can recognize some bootstrap markup here :)
+%form(action="https://#{ENV['S3_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" class='direct-upload')
+  =hidden_field_tag :key
+  =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
+  =hidden_field_tag :acl, 'public-read'
+  =hidden_field_tag :policy
+  =hidden_field_tag :signature
+  =hidden_field_tag :success_action_status, '201'
+
+  =file_field_tag :file
+
   .progress.progress-striped.active
     .bar
-  #attachment-containter
+  #attachment-container
     =link_to '', '#', id: 'real_file_url', target: '_blank'
+

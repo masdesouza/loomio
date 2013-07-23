@@ -3,9 +3,24 @@
     = render 'avatar', user: current_user, size: "medium", kind: nil, id: nil
     #comment-input{ data: {group: @group.id} }
       = text_area_tag 'comment', "", id: 'new-comment', placeholder: t(:comment_form_placeholder)
+      #attachment-container
       = hidden_field_tag 'uses_markdown', @uses_markdown, {id: 'global-uses-markdown'}
       = submit_tag t(:comment_form_submit_button), class: "btn btn-small submit", id: 'post-new-comment', :data => {:disable_with => t(:comment_form_submit_button)}
     .dropdown#comment-markdown-dropdown.global-markdown-setting
       %a.dropdown-toggle{href:'#comment-markdown-dropdown', id:'comment-markdown-dropdown-link', 'data-toggle'=> 'dropdown'}
         = markdown_img(@uses_markdown)
       = render 'markdown_setting', target: current_user
+
+  %form(action="https://#{ENV['S3_BUCKET']}.s3.amazonaws.com" method="post" enctype="multipart/form-data" class='direct-upload')
+    =hidden_field_tag :key
+    =hidden_field_tag :AWSAccessKeyId, ENV['AWS_ACCESS_KEY_ID']
+    =hidden_field_tag :acl, 'public-read'
+    =hidden_field_tag :policy
+    =hidden_field_tag :signature
+    =hidden_field_tag :success_action_status, '201'
+
+    %input{type: :file, name: :file }
+    / =file_field_tag :file
+
+    .progress.progress-striped.active.hidden
+      .bar
