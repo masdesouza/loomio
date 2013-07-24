@@ -19,6 +19,7 @@ class Comment < ActiveRecord::Base
   belongs_to :user
   has_many :comment_votes
   has_many :events, :as => :eventable, :dependent => :destroy
+  has_many :attachments
 
   after_create :update_discussion_last_comment_at
   after_create :fire_new_comment_event

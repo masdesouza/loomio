@@ -4,6 +4,12 @@
     #comment-input{ data: {group: @group.id} }
       = text_area_tag 'comment', "", id: 'new-comment', placeholder: t(:comment_form_placeholder)
       #attachment-container
+        .attachment-uploader
+          .uploading-filename
+            filename
+          .progress.active
+            .bar
+          %button.close &times;
       = hidden_field_tag 'uses_markdown', @uses_markdown, {id: 'global-uses-markdown'}
       = submit_tag t(:comment_form_submit_button), class: "btn btn-small submit", id: 'post-new-comment', :data => {:disable_with => t(:comment_form_submit_button)}
     .dropdown#comment-markdown-dropdown.global-markdown-setting
@@ -22,5 +28,5 @@
     %input{type: :file, name: :file }
     / =file_field_tag :file
 
-    .progress.progress-striped.active.hidden
-      .bar
+    / .progress.progress-striped.active.hidden
+    /   .bar

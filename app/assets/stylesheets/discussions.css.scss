@@ -27,10 +27,20 @@ body.discussions.show {
   #attachment-container {
     margin: 0px 18px 0px 48px;
     font-size: 12px;
-    div {
+    .attachment {
       background: #EBEBEB;
       margin-bottom: 3px;
       padding: 2px 2px 2px 10px;
+    }
+    .attachment-uploader {
+      display: none;
+      background: #EBEBEB;
+      margin-bottom: 3px;
+      padding: 2px 2px 2px 10px;
+      .uploading-filename, .progress, div, button {
+        display: inline-block;
+        vertical-align: top;
+      }
     }
   }
   .discussion-title-container {
