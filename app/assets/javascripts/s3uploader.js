@@ -1,6 +1,7 @@
 $(function() {
 
   var jqXHR;
+  var fileSize;
 
  $('.direct-upload').each(function() {
 
@@ -29,9 +30,11 @@ $(function() {
         jqXHR = data.submit();
       },
       send: function(e, data) {
+        console.log('send data', data);
+        fileSize = data.total;
         var filename = data.files[0].name;
-        $('#attachment-container .attachment-uploader .uploading-filename').html(filename)
-        $('#attachment-container .attachment-uploader').show()
+        $('.uploading-filename').html(filename)
+        $('.attachment-uploader').show()
         $('#post-new-comment').attr('disabled', 'true')
 
         // $('.progress').fadeIn();
@@ -42,10 +45,10 @@ $(function() {
         var percent = Math.round((e.loaded / e.total) * 100)
         $('.bar').css('width', percent + '%')
 
-        $('#attachment-container .attachment-uploader .close').click(function (e) {
+        $('.attachment-uploader .close').click(function (e) {
           console.log('cancel method activated')
-            jqXHR.abort();
-
+          jqXHR.abort();
+          $('.attachment-uploader').hide()
         });
       },
       fail: function(e, data) {
@@ -55,33 +58,49 @@ $(function() {
       },
       success: function(data) {
         // Here we get the file url on s3 in an xml doc
+        console.log('sucess data', data)
         var url = $(data).find('Location').text()
         var key = $(data).find('Key').text().split('/')
-        var file_name = key[key.length-1];
+        var filename = key[key.length-1];
 
-        $('.attachment-uploader').hide();
-        $('#attachment-container').append('<div>'+'<a href='+url+'>'+file_name+'</a></div>')
+        $.ajax({
+          url: "/attachments",
+          type: 'POST',
+          dataType: 'json',
+          data: {filename: filename, location: url}, // send the file name to the server so it can generate the key param
+          async: false,
+          success: function(data) {
+            // Now that we have our data, we update the form so it contains all
+            // the needed data to sign the request
+            console.log('successfully fired to controller')
+            console.log(data)
 
-        $('#post-new-comment').removeAttr('disabled')
-        // $.ajax({
-        //   url: '/attachments',
-        //   type: 'POST',
-        //   dataType: 'text',
-        //   data: url
-        // }).done()
+            var id = data.attachmentId
+            $('#new-comment-form').append('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
+
+          },
+          complete: function(data) {
+            console.log('fired to controller')
+          }
+        })
+
 
         // console.log(data)
-        // console.log(file_name)
+        // console.log(filename)
         // console.log(url)
-        
-        // $('#real_file_url').LastChild.html(file_name).attr('href', url)
-        // $('#real_file_url').attr('href', url) // Update the real input in the other form
-      },
-      done: function (event, data) {
-        $('.progress').fadeOut(300, function() {
-          $('.bar').css('width', 0)
-        })
+
+        $('.attachment-uploader').hide();
+        $('#attachment-container').append('<div>'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'</div>')
+        $('.bar').css('width', '0%')
+
+        $('#post-new-comment').removeAttr('disabled')
+
       }
+      // done: function (event, data) {
+      //   $('.progress').fadeOut(300, function() {
+      //     $('.bar').css('width', 0)
+      //   })
+      // }
     })
   });
 })

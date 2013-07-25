@@ -26,7 +26,7 @@ describe Queries::UnreadDiscussions do
     context "discussion has been viewed but there is a new comment" do
       it "returns discussion" do
         ViewLogger.discussion_viewed(discussion, viewer)
-        discussion.add_comment(commenter, "hi", false)
+        discussion.add_comment(commenter, "hi", uses_markdown: false)
         Queries::UnreadDiscussions.for(viewer, group).should include(discussion)
       end
     end
@@ -34,7 +34,7 @@ describe Queries::UnreadDiscussions do
     context 'discussion has been unfollowed' do
       it 'does not return discussion' do
         ViewLogger.discussion_unfollowed(discussion, viewer)
-        discussion.add_comment(commenter, "hi", false)
+        discussion.add_comment(commenter, "hi", uses_markdown: false)
         Queries::UnreadDiscussions.for(viewer, group).should_not include(discussion)
       end
     end

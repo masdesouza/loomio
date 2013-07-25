@@ -28,5 +28,10 @@
     %input{type: :file, name: :file }
     / =file_field_tag :file
 
-    / .progress.progress-striped.active.hidden
-    /   .bar
+
+    .attachment-uploader
+      .uploading-filename
+        filename
+      .progress.progress-striped.active
+        .bar
+      %button.close &times;

@@ -96,7 +96,9 @@ class DiscussionsController < GroupBaseController
   def add_comment
     if params[:comment].present?
       @discussion = Discussion.find(params[:id])
-      @comment = @discussion.add_comment(current_user, params[:comment], params[:uses_markdown])
+      p params[:attachments]
+      @comment = @discussion.add_comment(current_user, params[:comment],
+                                         uses_markdown: params[:uses_markdown], attachments: params[:attachments])
       current_user.update_attributes(uses_markdown: params[:uses_markdown])
       ViewLogger.discussion_viewed(@discussion, current_user)
       unless request.xhr?

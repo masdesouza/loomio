@@ -1,7 +1,10 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :filename, :address
+  attr_accessible :filename, :location
 
-  validates_presence_of :filename, :address, :user_id
+  belongs_to :user
+  belongs_to :comment
+
+  validates_presence_of :filename, :location, :user_id
 end
 
 

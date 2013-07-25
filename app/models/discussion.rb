@@ -52,8 +52,10 @@ class Discussion < ActiveRecord::Base
     group.users.include? user
   end
 
-  def add_comment(user, comment, uses_markdown)
+  # def add_comment(user, comment, uses_markdown)
+  def add_comment(user, comment, options={} )
     if can_be_commented_on_by? user
+      uses_markdown = options[:uses_markdown]
       comment = Comment.build_from self, user.id, comment, uses_markdown
       comment.save!
       comment
