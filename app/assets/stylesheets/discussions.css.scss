@@ -184,6 +184,11 @@ body.discussions.show {
     }
   }
 
+  .direct-upload {
+    margin-left: 200px;
+    margin-top: -40px;
+  }
+
   #content-comments {
     border-right: 1px solid $lighter-grey;
     min-height: 660px;
@@ -217,10 +222,14 @@ body.discussions.show {
         margin-right: 10px;
       }
     }
-    #comment-markdown-dropdown {
+
+    .comment-toolbar {
+      float: right;
       margin-top: -32px;
       margin-right: -8px;
     }
+
+    #comment-markdown-dropdown {}
     .markdown-setting-dropdown {
       margin-top: -2px;
     }
