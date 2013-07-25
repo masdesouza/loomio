@@ -5,6 +5,7 @@
       .form-container
         = text_area_tag 'comment', "", id: 'new-comment', placeholder: t(:comment_form_placeholder)
         #attachment-container
+          .attachments
           .attachment-uploader
             .uploading-filename
               filename

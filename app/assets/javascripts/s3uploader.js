@@ -76,8 +76,9 @@ $(function() {
             console.log('successfully fired to controller')
             console.log(data)
 
-            var id = data.attachmentId
+            id = data.attachmentId
             $('#new-comment-form').prepend('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
+            $('.attachments').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'<button id=cancel-attachemnt-'+id+' class="close">&times;</button></div>')
 
           },
           complete: function(data) {
@@ -86,7 +87,6 @@ $(function() {
         })
 
         // $('.attachment-uploader').hide();
-        $('#attachment-container').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'</div>')
 
 
 
@@ -102,4 +102,17 @@ $(function() {
       }
     })
   });
+
+  $('.attachment-success .close').click(function() {
+
+    console.log($(this))
+
+
+  })
+
+
+
+
+
+
 })
