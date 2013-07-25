@@ -103,8 +103,10 @@ $(function() {
     });
   });
 
-  $('.attachment-success .close').click(function (e) {
-    e.preventDefaultAction()
+  $(document).on('click', '.attachment-success .close', function (e) {
+    // e.stopImmediatePropagation();
+    // e.stopPropagation();
+    // e.preventDefault();
     console.log('Working');
     var id = $(this).attr('id').split('-')[2];
     var selector = '#comment-attachment-' + id;
@@ -115,6 +117,21 @@ $(function() {
     dog.remove();
 
   })
+
+  // $('.attachment-success .close').click(function (e) {
+  //   e.stopImmediatePropagation();
+  //   e.stopPropagation();
+  //   e.preventDefault();
+  //   console.log('Working');
+  //   var id = $(this).attr('id').split('-')[2];
+  //   var selector = '#comment-attachment-' + id;
+  //   $('#new-comment-form').find(selector).remove();
+
+  //   var dog = $(this).parent()[0];
+  //   console.log(dog);
+  //   dog.remove();
+
+  // })
 
 });
 

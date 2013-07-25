@@ -47,5 +47,3 @@
 //= require lib/jquery.ui.widget
 //= require lib/jquery.fileupload
 //= require s3uploader
-//= require silly_test
-

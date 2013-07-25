@@ -46,9 +46,7 @@ class Comment < ActiveRecord::Base
     c.body = comment
     c.user_id = user_id
     c.uses_markdown = options[:uses_markdown]
-    p 'LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOK'
-    options[:attachments].map{|s| s.to_i}
-    c.attachment_ids = options[:attachments].map{|s| s.to_i}
+    c.attachment_ids = options[:attachments].present? ? options[:attachments].map{|s| s.to_i} : nil
     c
   end
 
