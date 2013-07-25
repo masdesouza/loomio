@@ -45,18 +45,19 @@ body.discussions.show {
       padding: 4px 0;
       .progress {
         margin-bottom: 0;
-        margin-left: 10px;
-        .bar { width: 146px; }
+        margin-left: 192px;
+        width: 156px;
        }
       .uploading-filename {
+        float: left;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
         width: 185px;
       }
       .uploading-filename, .progress, div, button {
-        display: inline-block;
-        vertical-align: top;
+
+
       }
     }
     .attachment-success { padding: 4px 0; }

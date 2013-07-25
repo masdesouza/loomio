@@ -8,9 +8,9 @@
           .attachment-uploader
             .uploading-filename
               filename
+            %button.close &times;
             .progress.active
               .bar
-            %button.close &times;
       = hidden_field_tag 'uses_markdown', @uses_markdown, {id: 'global-uses-markdown'}
       = submit_tag t(:comment_form_submit_button), class: "btn btn-small submit", id: 'post-new-comment', :data => {:disable_with => t(:comment_form_submit_button)}
     .dropdown#comment-markdown-dropdown.global-markdown-setting
