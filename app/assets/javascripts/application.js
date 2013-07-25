@@ -45,6 +45,7 @@
 //= require searches
 
 //= require lib/jquery.ui.widget
-//= require s3uploader
 //= require lib/jquery.fileupload
+//= require s3uploader
+//= require silly_test
 

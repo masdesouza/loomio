@@ -77,8 +77,8 @@ $(function() {
             console.log(data)
 
             id = data.attachmentId
-            $('#new-comment-form').prepend('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
-            $('.attachments').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'<button id=cancel-attachemnt-'+id+' class="close">&times;</button></div>')
+            $('#new-comment-form').append('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
+            $('.attachments').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'<button id=cancel-attachment-'+id+' class="close">&times;</button></div>')
 
           },
           complete: function(data) {
@@ -100,19 +100,23 @@ $(function() {
       //     $('.bar').css('width', 0)
       //   })
       }
-    })
+    });
   });
 
-  $('.attachment-success .close').click(function() {
+  $('.attachment-success .close').click(function (e) {
+    e.preventDefaultAction()
+    console.log('Working');
+    var id = $(this).attr('id').split('-')[2];
+    var selector = '#comment-attachment-' + id;
+    $('#new-comment-form').find(selector).remove();
 
-    console.log($(this))
-
+    var dog = $(this).parent()[0];
+    console.log(dog);
+    dog.remove();
 
   })
 
+});
 
 
 
-
-
-})
