@@ -31,7 +31,7 @@ $(function() {
       },
       send: function(e, data) {
         console.log('send data', data);
-        fileSize = data.total;
+        fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
         var filename = data.files[0].name;
         $('.uploading-filename').html(filename)
         $('.attachment-uploader').show()
@@ -78,7 +78,7 @@ $(function() {
 
             id = data.attachmentId
             $('#new-comment-form').append('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
-            $('.attachments').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+' B)'+'<button id=cancel-attachment-'+id+' class="close">&times;</button></div>')
+            $('.attachments').append('<div class="attachment-success">'+'<a href='+url+'>'+filename+'</a>'+' ('+fileSize+')<button id=cancel-attachment-'+id+' class="close">&times;</button></div>')
 
           },
           complete: function(data) {
