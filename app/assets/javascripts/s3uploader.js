@@ -60,7 +60,7 @@ $(function() {
         var file_name = key[key.length-1];
 
         $('.attachment-uploader').hide();
-        $('#attachment-container').append('<div>'+'<a href='+url+'>'+file_name+'</a></div>')
+        $('#attachment-container').append('<div class="attachment-success">'+'<a href='+url+'>'+file_name+'</a></div>')
 
         $('#post-new-comment').removeAttr('disabled')
         // $.ajax({
@@ -73,7 +73,7 @@ $(function() {
         // console.log(data)
         // console.log(file_name)
         // console.log(url)
-        
+
         // $('#real_file_url').LastChild.html(file_name).attr('href', url)
         // $('#real_file_url').attr('href', url) // Update the real input in the other form
       },
