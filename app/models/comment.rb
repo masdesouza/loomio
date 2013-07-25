@@ -39,13 +39,16 @@ class Comment < ActiveRecord::Base
   # Helper class method that allows you to build a comment
   # by passing a commentable object, a user_id, and comment text
   # example in readme
-  def self.build_from(obj, user_id, comment, uses_markdown)
+  def self.build_from(obj, user_id, comment, options = {})
     c = self.new
     c.commentable_id = obj.id
     c.commentable_type = obj.class.base_class.name
     c.body = comment
     c.user_id = user_id
-    c.uses_markdown = uses_markdown
+    c.uses_markdown = options[:uses_markdown]
+    p 'LOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOK'
+    options[:attachments].map{|s| s.to_i}
+    c.attachment_ids = options[:attachments].map{|s| s.to_i}
     c
   end
 
