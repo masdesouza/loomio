@@ -29,13 +29,4 @@
     =hidden_field_tag :signature
     =hidden_field_tag :success_action_status, '201'
 
-    %input{type: :file, name: :file }
-    / =file_field_tag :file
-
-
-    / .attachment-uploader
-    /   .uploading-filename
-    /     filename
-    /   .progress.progress-striped.active
-    /     .bar
-    /   %button.close &times;
+    %input{type: :file, name: :file, id: 'upload-attachment'}
