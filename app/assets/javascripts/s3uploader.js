@@ -118,6 +118,11 @@ $(function() {
 
   })
 
+  $(document).on('click', '#upload-attachment', function (){
+    $('input:file').trigger('click');
+    return false;
+  })
+
   // $('.attachment-success .close').click(function (e) {
   //   e.stopImmediatePropagation();
   //   e.stopPropagation();
