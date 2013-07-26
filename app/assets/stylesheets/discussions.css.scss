@@ -121,6 +121,7 @@ body.discussions.show {
         }
       }
     }
+
     #discussion-context {
       border-bottom: 1px solid $lighter-grey;
       min-height: 70px;
@@ -190,9 +191,11 @@ body.discussions.show {
     }
   }
 
+
   .direct-upload {
-    margin-left: 200px;
-    margin-top: -40px;
+    // margin-left: 200px;
+    // margin-top: -40px;
+    display: none;
   }
 
   #content-comments {
@@ -233,7 +236,14 @@ body.discussions.show {
       float: right;
       margin-top: -32px;
       margin-right: -8px;
+      width: 78px;
+      .attachment-icon {
+        cursor: pointer;
+        margin-top: 6px;
+      }
     }
+
+    .comment-toolbar > * { display: inline-block; }
 
     #comment-markdown-dropdown {}
     .markdown-setting-dropdown {
@@ -253,7 +263,7 @@ body.discussions.show {
       }
     }
     #post-new-comment {
-      margin: 5px 5px 5px 45px;
+      margin: 8px 5px 5px 45px;
     }
     /** Code block padding (Stops avatars destroying indentation) */
     pre {
