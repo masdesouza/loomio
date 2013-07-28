@@ -2,7 +2,7 @@ When(/^I write a comment, select a file to attach and click submit$/) do
   @comment_text = 'Test comment, with _markdown_'
   fill_in 'new-comment', with: @comment_text
 
-  # click_on 'upload-attachment'
+  # click_on '#upload-attachment'
   find("#upload-attachment").click
 
   # click_on 'post-new-comment'
