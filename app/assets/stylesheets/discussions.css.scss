@@ -67,6 +67,30 @@ body.discussions.show {
     padding: 6px;
     background: #EBEBEB;
     margin: 5px 0;
+      img {
+        width: 15px;
+        height: 15px;
+        behavior:url(-ms-transform.htc);
+        /* Firefox */
+        -moz-transform:rotate(47deg);
+        /* Safari and Chrome */
+        -webkit-transform:rotate(47deg);
+        /* Opera */
+        -o-transform:rotate(47deg);
+        /* IE9 */
+        -ms-transform:rotate(47deg);
+        /* IE8+ - must be on one line, unfortunately */
+        -ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.681998360062498, M12=-0.731353701619171, M21=0.731353701619171, M22=0.681998360062498, SizingMethod='auto expand')";
+
+        /* IE6 and 7 */
+        filter: progid:DXImageTransform.Microsoft.Matrix(
+                   M11=0.681998360062498,
+                   M12=-0.731353701619171,
+                   M21=0.731353701619171,
+                   M22=0.681998360062498,
+                   SizingMethod='auto expand');
+      }
+      a { margin-left: 3px; }
   }
   .discussion-title-container {
     display: inline-block;

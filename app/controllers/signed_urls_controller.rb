@@ -18,10 +18,10 @@ class SignedUrlsController < ApplicationController
         conditions: [
           { bucket: ENV['S3_BUCKET'] },
           { acl: 'public-read' },
-          ["starts-with", "$key", "uploads/"],
+          [ "starts-with", "$key", "uploads/" ],
           { success_action_status: '201' },
-          ["starts-with", "$Content-Type", ""],
-          ["content-length-range", 0, 52428800]
+          [ "starts-with", "$Content-Type", "" ],
+          [ "content-length-range", 0, 52428800 ]
         ]
       }.to_json
     ).gsub(/\n|\r/, '')

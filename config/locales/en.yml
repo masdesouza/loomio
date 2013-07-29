@@ -8,6 +8,10 @@ en:
     messages:
       email: "Not a valid email address"
 
+  attachment:
+    error:
+      too_large: "The file you tried to attach is larger than 50MB, please choose a smaller file."
+
   time:
     formats:
       for_today: '%l:%M %P'

@@ -2,10 +2,10 @@ When(/^I write a comment, select a file to attach and click submit$/) do
   @comment_text = 'Test comment, with _markdown_'
   fill_in 'new-comment', with: @comment_text
 
-  # click_on '#upload-attachment'
-  find("#upload-attachment").click
-
-  # click_on 'post-new-comment'
+  # find("#upload-attachment").click
+  @filename = 'circlelogo.png'
+  attach_file('file', File.join(Rails.root, "app/assets/images/#{@filename}"))
+  click_on 'post-new-comment'
 end
 
 Then(/^I should see the file name$/) do

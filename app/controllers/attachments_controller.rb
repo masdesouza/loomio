@@ -4,9 +4,10 @@ class AttachmentsController < ApplicationController
   end
 
   def create
-    p params
-    p params[:location].length
-    attachment = Attachment.new(filename: params[:filename], location: params[:location])  #refactor
+    filename = params[:filename]
+    location = params[:location]
+    filesize = params[:filesize]
+    attachment = Attachment.new(filename: filename, location: location, filesize: filesize)
     attachment.user = current_user
 
     if attachment.save
