@@ -62,16 +62,6 @@ class Membership < ActiveRecord::Base
     return user_name ? user_name : user_email
   end
 
-  def promote_to_member!(inviter=nil)
-    # TODO: try to merge with approve!
-    if request?
-      self.inviter = inviter
-      approve
-      save!
-      Events::UserAddedToGroup.publish!(self)
-    end
-  end
-
   def admin?
     access_level == 'admin'
   end

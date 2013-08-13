@@ -157,14 +157,22 @@ class Group < ActiveRecord::Base
 
   def add_member!(user, inviter=nil)
     membership = find_or_build_membership_for_user(user)
-    membership.promote_to_member!(inviter)
+    membership.inviter = inviter
+    membership.approve
+    membership.save
     membership
+  end
+
+  def add_members!(users, inviter=nil)
+    users.map do |user|
+      add_member!(user, inviter)
+    end
   end
 
   def add_admin!(user, inviter = nil)
     membership = find_or_build_membership_for_user(user)
     membership.make_admin!
-    membership.inviter = inviter if inviter.present?
+    membership.inviter = inviter
     membership
   end
 
