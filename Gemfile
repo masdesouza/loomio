@@ -59,6 +59,7 @@ group :assets do
   gem 'bootstrap-sass', '~> 2.3.1.0'
   gem 'uglifier', '~> 1.1.0'
   gem 'modernizr-rails', '~> 2.6.2'
+  gem 'jquery-fileupload-rails', '~> 0.4.1'
 end
 
 group :development, :test do

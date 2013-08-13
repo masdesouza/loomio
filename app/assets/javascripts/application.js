@@ -44,8 +44,6 @@
 //= require autodetect_time_zone
 //= require inbox
 //= require searches
-
-//= require lib/jquery.ui.widget
-//= require lib/jquery.fileupload
+//= require jquery-fileupload/basic
 //= require s3uploader
 //= require subscriptions
