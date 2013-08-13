@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130724024039) do
+ActiveRecord::Schema.define(:version => 20130811235640) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -88,8 +88,7 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
   add_index "comment_votes", ["user_id"], :name => "index_comment_votes_on_user_id"
 
   create_table "comments", :force => true do |t|
-    t.integer  "commentable_id",      :default => 0
-    t.string   "commentable_type",    :default => ""
+    t.integer  "discussion_id",       :default => 0
     t.string   "title",               :default => ""
     t.text     "body",                :default => ""
     t.string   "subject",             :default => ""
@@ -103,7 +102,8 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
     t.integer  "comment_votes_count", :default => 0,     :null => false
   end
 
-  add_index "comments", ["commentable_id"], :name => "index_comments_on_commentable_id"
+  add_index "comments", ["discussion_id"], :name => "index_comments_on_commentable_id"
+  add_index "comments", ["discussion_id"], :name => "index_comments_on_discussion_id"
   add_index "comments", ["parent_id"], :name => "index_comments_on_parent_id"
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
@@ -142,18 +142,19 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
   add_index "did_not_votes", ["motion_id"], :name => "index_did_not_votes_on_motion_id"
   add_index "did_not_votes", ["user_id"], :name => "index_did_not_votes_on_user_id"
 
-  create_table "discussion_read_logs", :force => true do |t|
+  create_table "discussion_readers", :force => true do |t|
     t.integer  "user_id"
-    t.datetime "created_at",                                  :null => false
-    t.datetime "updated_at",                                  :null => false
+    t.datetime "created_at",                            :null => false
+    t.datetime "updated_at",                            :null => false
     t.integer  "discussion_id"
-    t.datetime "discussion_last_viewed_at"
-    t.boolean  "following",                 :default => true, :null => false
+    t.datetime "last_read_at"
+    t.boolean  "following",           :default => true, :null => false
+    t.integer  "read_comments_count"
   end
 
-  add_index "discussion_read_logs", ["discussion_id"], :name => "index_motion_read_logs_on_discussion_id"
-  add_index "discussion_read_logs", ["user_id", "discussion_id"], :name => "index_discussion_read_logs_on_user_id_and_discussion_id"
-  add_index "discussion_read_logs", ["user_id"], :name => "index_motion_read_logs_on_user_id"
+  add_index "discussion_readers", ["discussion_id"], :name => "index_motion_read_logs_on_discussion_id"
+  add_index "discussion_readers", ["user_id", "discussion_id"], :name => "index_discussion_read_logs_on_user_id_and_discussion_id"
+  add_index "discussion_readers", ["user_id"], :name => "index_motion_read_logs_on_user_id"
 
   create_table "discussions", :force => true do |t|
     t.integer  "group_id"
@@ -166,6 +167,7 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
     t.boolean  "uses_markdown",   :default => true,  :null => false
     t.integer  "total_views",     :default => 0,     :null => false
     t.boolean  "is_deleted",      :default => false, :null => false
+    t.integer  "comments_count",  :default => 0,     :null => false
   end
 
   add_index "discussions", ["author_id"], :name => "index_discussions_on_author_id"
@@ -246,8 +248,8 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
 
   create_table "groups", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at",                              :null => false
-    t.datetime "updated_at",                              :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.string   "viewable_by"
     t.string   "members_invitable_by"
     t.integer  "parent_id"
@@ -256,19 +258,19 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
     t.boolean  "beta_features",        :default => false
     t.text     "description"
     t.datetime "archived_at"
-    t.integer  "memberships_count",    :default => 0,     :null => false
+    t.integer  "memberships_count",    :default => 0,      :null => false
     t.integer  "max_size"
     t.boolean  "cannot_contribute",    :default => false
     t.integer  "distribution_metric"
     t.string   "sectors"
     t.string   "other_sector"
-    t.integer  "discussions_count",    :default => 0,     :null => false
-    t.integer  "motions_count",        :default => 0,     :null => false
+    t.integer  "discussions_count",    :default => 0,      :null => false
+    t.integer  "motions_count",        :default => 0,      :null => false
     t.string   "country_name"
     t.datetime "setup_completed_at"
-    t.boolean  "next_steps_completed", :default => false, :null => false
+    t.boolean  "next_steps_completed", :default => false,  :null => false
     t.string   "full_name"
-    t.boolean  "paying_subscription",  :default => false, :null => false
+    t.string   "payment_plan",         :default => "pwyc"
   end
 
   add_index "groups", ["full_name"], :name => "index_groups_on_full_name"
@@ -286,6 +288,7 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
     t.string   "intent"
     t.integer  "canceller_id"
     t.datetime "cancelled_at"
+    t.string   "recipient_name"
   end
 
   add_index "invitations", ["group_id"], :name => "index_invitations_on_group_id"
@@ -372,50 +375,58 @@ ActiveRecord::Schema.define(:version => 20130724024039) do
   add_index "notifications", ["event_id"], :name => "index_notifications_on_event_id"
   add_index "notifications", ["user_id"], :name => "index_notifications_on_user_id"
 
+  create_table "subscriptions", :force => true do |t|
+    t.integer  "group_id"
+    t.integer  "amount"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "profile_id"
+  end
+
+  add_index "subscriptions", ["group_id"], :name => "index_subscriptions_on_group_id"
+
   create_table "users", :force => true do |t|
-    t.string   "email",                                                      :default => "",         :null => false
-    t.string   "encrypted_password",                                         :default => ""
+    t.string   "email",                                        :default => "",         :null => false
+    t.string   "encrypted_password",                           :default => ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                                              :default => 0
+    t.integer  "sign_in_count",                                :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at",                                                                         :null => false
-    t.datetime "updated_at",                                                                         :null => false
+    t.datetime "created_at",                                                           :null => false
+    t.datetime "updated_at",                                                           :null => false
     t.string   "name"
     t.string   "unconfirmed_email"
-    t.string   "invitation_token",                             :limit => 60
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.datetime "deleted_at"
-    t.string   "avatar_kind",                                                :default => "initials", :null => false
+    t.string   "avatar_kind",                                  :default => "initials", :null => false
     t.string   "uploaded_avatar_file_name"
     t.string   "uploaded_avatar_content_type"
     t.integer  "uploaded_avatar_file_size"
     t.datetime "uploaded_avatar_updated_at"
-    t.boolean  "has_read_system_notice",                                     :default => false,      :null => false
-    t.boolean  "is_admin",                                                   :default => false
+    t.boolean  "has_read_system_notice",                       :default => false,      :null => false
+    t.boolean  "is_admin",                                     :default => false
     t.string   "avatar_initials"
     t.string   "username"
-    t.boolean  "subscribed_to_daily_activity_email",                         :default => false,      :null => false
-    t.boolean  "subscribed_to_mention_notifications",                        :default => true,       :null => false
-    t.boolean  "subscribed_to_proposal_closure_notifications",               :default => true,       :null => false
+    t.boolean  "subscribed_to_daily_activity_email",           :default => false,      :null => false
+    t.boolean  "subscribed_to_mention_notifications",          :default => true,       :null => false
+    t.boolean  "subscribed_to_proposal_closure_notifications", :default => true,       :null => false
     t.string   "authentication_token"
     t.string   "unsubscribe_token"
-    t.integer  "memberships_count",                                          :default => 0,          :null => false
-    t.boolean  "uses_markdown",                                              :default => false
+    t.integer  "memberships_count",                            :default => 0,          :null => false
+    t.boolean  "uses_markdown",                                :default => false
     t.string   "language_preference"
     t.string   "time_zone"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["invitation_token"], :name => "index_users_on_invitation_token"
   add_index "users", ["invited_by_id"], :name => "index_users_on_invited_by_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
   add_index "users", ["unsubscribe_token"], :name => "index_users_on_unsubscribe_token", :unique => true

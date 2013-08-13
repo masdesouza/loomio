@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Comment do
   let(:user) { stub_model(User) }
   let(:discussion) { FactoryGirl.create(:discussion) }
-  let(:comment) { FactoryGirl.create(:comment, commentable: discussion) }
+  let(:comment) { FactoryGirl.create(:comment, discussion: discussion) }
 
   it { should have_many(:events).dependent(:destroy) }
   it { should respond_to(:uses_markdown) }
@@ -42,7 +42,7 @@ describe Comment do
     end
 
     it "increases like count" do
-      comment.likes.count.should == 1
+      comment.comment_votes.count.should == 1
     end
 
     it "returns a CommentVote object" do
@@ -55,7 +55,7 @@ describe Comment do
       end
 
       it "does not increase like count" do
-        comment.likes.count.should == 1
+        comment.comment_votes.count.should == 1
       end
     end
   end
@@ -67,7 +67,7 @@ describe Comment do
     end
 
     it "decreases like count" do
-      comment.likes.count.should == 0
+      comment.comment_votes.count.should == 0
     end
 
     context "unliked again by the same user" do
@@ -76,7 +76,7 @@ describe Comment do
       end
 
       it "does not decrease like count" do
-        comment.likes.count.should == 0
+        comment.comment_votes.count.should == 0
       end
     end
   end

@@ -106,62 +106,6 @@ describe User do
     end
   end
 
-  context do
-    before do
-      group.add_member! user
-      @discussion1 = create :discussion, :group => group
-      motion1 = create :motion, discussion: @discussion1, author: user
-      @discussion2 = create :discussion, :group => group
-      motion2 = create :motion, discussion: @discussion2, author: user
-      vote = Vote.new position: "yes"
-      vote.motion = motion2
-      vote.user = user
-      vote.save
-    end
-    describe "discussions_with_current_motion_not_voted_on" do
-      it "returns all discussions with a current motion that a user has not voted on" do
-        user.discussions_with_current_motion_not_voted_on.should include(@discussion1)
-        user.discussions_with_current_motion_not_voted_on.should_not include(@discussion2)
-      end
-    end
-
-    describe "discussions_with_current_motion_voted_on" do
-      it "returns all discussions with a current motion that a user has voted on" do
-        user.discussions_with_current_motion_voted_on.should include(@discussion2)
-        user.discussions_with_current_motion_voted_on.should_not include(@discussion1)
-      end
-    end
-  end
-
-  describe "user.discussions_sorted" do
-    before do
-      @user = create :user
-      @group = create :group
-      @group.add_member! @user
-      @discussion1 = create :discussion, group: @group, :author => @user
-    end
-
-    it "returns a list of discussions sorted by last_comment_at" do
-      pending 'this does not help'
-      @discussion2 = create :discussion, :author => @user
-      @discussion2.add_comment @user, "hi", uses_markdown: false
-      @discussion3 = create :discussion, :author => @user
-      @discussion1.add_comment @user, "hi", uses_markdown: false
-      @user.discussions_sorted.should == [@discussion1, @discussion4, @discussion3, ]
-      @user.discussions_sorted[0].should == @discussion1
-      @user.discussions_sorted[1].should == @discussion4
-      @user.discussions_sorted[2].should == @discussion3
-      @user.discussions_sorted[3].should == @discussion2
-    end
-
-    it "should not include discussions with a current motion" do
-      motion = create :motion, :discussion => @discussion1, author: @user
-      motion.close!
-      motion1 = create :motion, :discussion => @discussion1, author: @user
-      @user.discussions_sorted.should_not include(@discussion1)
-    end
-  end
-
   describe "user.voted?(motion)" do
     before do
       group.add_member!(user)
@@ -461,14 +405,22 @@ describe User do
   end
 
   describe "belongs_to_paying_group" do
-    it "returns true if user is a member of a paying group" do
-      group.paying_subscription = true
+    it "returns true if user is a member of a manual subscription group" do
+      group.payment_plan = 'manual_subscription'
       group.save!
       group.add_member!(user)
-      user.belongs_to_paying_group?.should == true
+      user.belongs_to_paying_group?.should be_true
     end
+
+    it "returns true if user is a member of a subscription group" do
+      group.payment_plan = 'subscription'
+      group.save!
+      group.add_member!(user)
+      user.belongs_to_paying_group?.should be_true
+    end
+
     it "returns false if user is not a member of a paying group" do
-      group.paying_subscription == false
+      user.belongs_to_paying_group?.should be_false
     end
   end
 

@@ -273,7 +273,10 @@ body.discussions.show {
     .markdown-setting-dropdown {
       margin-top: -2px;
     }
-    textarea#new-comment {
+
+    textarea #new-comment {
+    }
+    #new-comment {
       background: none;
       border: 0;
       color: $dark-grey;
