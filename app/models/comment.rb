@@ -36,7 +36,7 @@ class Comment < ActiveRecord::Base
     c.discussion_id = obj.id
     c.body = body
     c.user_id = user_id
-    c.uses_markdown = options[:uses_markdown]
+    c.uses_markdown = options[:uses_markdown] || false
     c.attachment_ids = options[:attachments].present? ? options[:attachments].map{|s| s.to_i} : nil
     c
   end

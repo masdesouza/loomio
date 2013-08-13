@@ -13,7 +13,6 @@ $(function() {
       autoUpload: true,
       dataType: 'xml', // This is really important as s3 gives us back the url of the file in a XML document
       add: function (event, data) {
-        console.log(data)
         if (data.files[0].size >= 52428800) { // note 50MB limit is duplicated in the sign_urls_controller
           alert( $('.attachment-too-large-error-message').html() )
         }
@@ -36,7 +35,6 @@ $(function() {
         }
       },
       send: function(e, data) {
-        console.log('send data', data);
         fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
         var filename = data.files[0].name;
         $('.uploading-filename').html(filename)
@@ -53,7 +51,6 @@ $(function() {
 
         $('.attachment-uploader .close').click(function (e) {
           // this cancles an upload that is underway
-          console.log('cancel method activated')
           jqXHR.abort();
           $('.attachment-uploader').hide();
           $('.bar').css('width', 0 + '%');
@@ -65,7 +62,6 @@ $(function() {
       },
       success: function(data) {
         // Here we get the file url on s3 in an xml doc
-        console.log('sucess data', data)
         var location = $(data).find('Location').text().split('%2F').join('/')
         var key = $(data).find('Key').text().split('/')
         var filename = key[key.length-1];
@@ -87,7 +83,7 @@ $(function() {
 
           },
           complete: function(data) {
-            console.log('fired to controller')
+            // console.log('fired to controller')
           }
         })
 

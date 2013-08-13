@@ -3,13 +3,13 @@ When(/^I write a comment, select a file to attach and click submit$/) do
   fill_in 'new-comment', with: @comment_text
 
   # find("#upload-attachment").click
-  @filename = 'circlelogo.png'
+  @filename = 'how-loomio-works.png'
   attach_file('file', File.join(Rails.root, "app/assets/images/#{@filename}"))
   click_on 'post-new-comment'
 end
 
 Then(/^I should see the file name$/) do
-  pending # express the regexp above with the code you wish you had
+  find('.uploading-filename').should have_content(@filename)
 end
 
 Then(/^I should see a progress bar for the attachment upload$/) do
