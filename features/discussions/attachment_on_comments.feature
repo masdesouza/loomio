@@ -3,34 +3,32 @@ Feature: Attachments on comments
   As a user
   I need to be able to attach files to comments
 
-  @javascript
-  Scenario: Member attaches files and posts comment
+  Background:
     Given I am logged in
-    And there is a discussion in a group I belong to
-    When I visit the discussion page
-    # And I write a comment, select a file to attach and click submit
-    # Then I should see the file name
-    # And I should see a progress bar for the attachment upload
-    # And I should see a cancel button for the attachment upload
+    And I belong to a group with a discussion
+    And I am on the discussion page
 
-    # When I wait 5 seconds
-    # Then I should not see a progress bar
-    # And I should see a cancel button for the attachment
+  @javascript
+  Scenario: User attaches file and posts comment
+    When I attach a file
+    And  I post a comment
+    Then I should see the posted comment with the attachment
 
-    # When I click submit
-    # Then I should see my comment
-    # And there should be a link to the attachment
+  @javascript
+  Scenario: User attaches file, cancels upload and posts comment
+    When I attach a file and cancel the upload
+    And I post a comment
+    Then I should see the posted comment without an attachment
 
-  Scenario: Member attaches a file, then removes the file and posts the comment
+  @javascript
+  Scenario: User attaches file, removes attachment and posts comment
+    When I attach a file
+    And remove the file
+    And I post a comment
+    Then I should see the posted comment without an attachment
 
-  Scenario: Member starts attaching a file, cancels file upload, then attaches another file and posts comment
-
-  Scenario: Member starts attaching a file and tries to post comment whilst file is uploading
-
-  Scenario: Member starts attaching a file and tries to attach another file while file is uploading
-
-  Scenario: Member starts attaching a file and connection fails
-
-  Scenario: Member tries to upload a 500MB file
-
+  @javascript
+  Scenario: User cannot attach oversized file
+    When I attach an oversized file
+    Then I should be told the file is oversized
 
