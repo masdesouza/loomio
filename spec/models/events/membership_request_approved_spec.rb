@@ -1,7 +1,13 @@
 require 'spec_helper'
 
 describe Events::MembershipRequestApproved do
-  let(:membership){ mock_model(Membership) }
+  let(:user) { mock_model(User) }
+  let(:group) { mock_model(Group) }
+  let(:membership){ mock_model(Membership, user: user, group: group) }
+
+  before do
+    UserMailer.stub_chain(:delay, :group_membership_approved)
+  end
 
   describe "::publish!" do
     let(:event) { stub(:event, notify_users!: true) }
@@ -19,16 +25,9 @@ describe Events::MembershipRequestApproved do
   end
 
   context "after event has been published" do
-    let(:user) { mock_model(User) }
-    let(:group) { mock_model(Group) }
     let(:event) { Events::MembershipRequestApproved.new(kind: "membership_request_approved",
                                            eventable: membership) }
 
-    before do
-      membership.stub(:user).and_return(user)
-      membership.stub(:group).and_return(group)
-      UserMailer.stub_chain(:group_membership_approved, :deliver)
-    end
 
     it 'notifies the requestor' do
       event.should_receive(:notify!).with(user)
@@ -36,7 +35,9 @@ describe Events::MembershipRequestApproved do
     end
 
     it 'emails the requestor of the approval' do
-      UserMailer.should_receive(:group_membership_approved).with(user, group)
+      delay = stub
+      delay.should_receive(:group_membership_approved).with(user, group)
+      UserMailer.stub(:delay).and_return(delay)
       event.save!
     end
   end

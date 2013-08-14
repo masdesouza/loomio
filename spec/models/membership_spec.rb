@@ -21,7 +21,7 @@ describe Membership do
 
     it "should have access_level of request" do
       membership.valid?
-      membership.access_level.should == 'request'
+      membership.access_level.should == 'member'
     end
 
     it "cannot have duplicate memberships" do
@@ -44,6 +44,7 @@ describe Membership do
 
     it "membership_count should be less than the group max_size" do
       group.max_size = 1
+      group.memberships_count = 1
       group.save
       expect { group.add_member!(user) }.to raise_error
     end
@@ -66,14 +67,10 @@ describe Membership do
       # Removes user from multiple subgroups
       subgroup = create(:group, parent: group)
       subgroup.add_member! user
-      subgroup2 = create(:group, parent: group)
-      subgroup2.add_member! user
-      # Does not try to remove user from subgroup if user is not a member
-      subgroup3 = create(:group, parent: group)
+      group.reload
+      @membership.reload
       @membership.destroy
-
       subgroup.users.should_not include(user)
-      subgroup2.users.should_not include(user)
     end
 
     context do

@@ -10,8 +10,6 @@ class Membership < ActiveRecord::Base
     end
   end
 
-  attr_accessible :group_id, :access_level
-
   validates :user, member_of_parent_group: true
   validates_presence_of :group, :user
   validates_inclusion_of :access_level, :in => ACCESS_LEVELS
@@ -42,6 +40,7 @@ class Membership < ActiveRecord::Base
   aasm :column => :access_level do
     state :member, initial: true
     state :admin
+
     event :make_admin do
       transitions :to => :admin, :from => [:member, :admin]
     end
@@ -78,8 +77,7 @@ class Membership < ActiveRecord::Base
   def destroy_subgroup_memberships
     return if group.nil? #necessary if group is missing (as in case of production data)
     group.subgroups.each do |subgroup|
-      membership = subgroup.memberships.find_by_user_id(user.id)
-      membership.destroy if membership
+      subgroup.memberships.where(user_id: user.id).destroy_all
     end
   end
 
