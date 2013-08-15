@@ -5,7 +5,7 @@ Feature: Email Templates
 
   Scenario: System admin creates email template
     When I visit the admin email templates page
-    And I click "New Email template"
+    And I click "New Email Template"
     And fill in and submit the email template form
     Then I should see the email template was created
 

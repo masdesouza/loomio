@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130807015738) do
+ActiveRecord::Schema.define(:version => 20130815040255) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.string   "resource_id",   :null => false
@@ -46,6 +46,17 @@ ActiveRecord::Schema.define(:version => 20130807015738) do
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
   end
+
+  create_table "attachments", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "filename"
+    t.string   "location"
+    t.integer  "comment_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "attachments", ["user_id", "comment_id"], :name => "index_attachments_on_user_id_and_comment_id"
 
   create_table "campaign_signups", :force => true do |t|
     t.integer  "campaign_id"
@@ -105,6 +116,14 @@ ActiveRecord::Schema.define(:version => 20130807015738) do
     t.text     "params"
   end
 
+  create_table "custom_email_templates", :force => true do |t|
+    t.string   "name"
+    t.string   "subject"
+    t.text     "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
@@ -162,6 +181,15 @@ ActiveRecord::Schema.define(:version => 20130807015738) do
   add_index "discussions", ["author_id"], :name => "index_discussions_on_author_id"
   add_index "discussions", ["group_id"], :name => "index_discussions_on_group_id"
   add_index "discussions", ["is_deleted"], :name => "index_discussions_on_is_deleted"
+
+  create_table "email_templates", :force => true do |t|
+    t.string   "name"
+    t.string   "language"
+    t.string   "subject"
+    t.text     "body"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "events", :force => true do |t|
     t.string   "kind"
