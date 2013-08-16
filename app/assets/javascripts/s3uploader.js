@@ -31,10 +31,12 @@ $(function() {
               form.find('input[name=signature]').val(data.signature);
             }
           })
+          // console.log(data)
           jqXHR = data.submit();
         }
       },
       send: function(e, data) {
+        // console.log(data)
         fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
         var filename = data.files[0].name;
         $('.uploading-filename').html(filename)

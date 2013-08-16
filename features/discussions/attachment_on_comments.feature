@@ -10,7 +10,8 @@ Feature: Attachments on comments
 
   @javascript
   Scenario: User attaches file and posts comment
-    When I attach a file
+    # And screenshot
+    # When I attach a file
     And  I post a comment
     Then I should see the posted comment with the attachment
 
@@ -31,4 +32,3 @@ Feature: Attachments on comments
   Scenario: User cannot attach oversized file
     When I attach an oversized file
     Then I should be told the file is oversized
-
