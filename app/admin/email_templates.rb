@@ -3,9 +3,7 @@ ActiveAdmin.register EmailTemplate do
     column :name
     column :language
     column :updated_at
-    actions defaults: true do |email_template|
-      link_to 'Preview', preview_admin_email_template_path
-    end
+    default_actions
   end
 
   form do |f|
@@ -17,11 +15,20 @@ ActiveAdmin.register EmailTemplate do
     end
     f.buttons
   end
-  
-  show do
-    user = User.loomio_helper_bot
+
+  show do |template|
+    recipient = User.loomio_helper_bot
     group = Group.find_by_name('Loomio Community')
-    email_template.render(recipient: user, author: current_user, group: group)
+
+    @email = Email.new_from_template(template,
+                                     to: "#{recipient.name} <#{recipient.email}>",
+                                     from: "#{current_user.name} via Loomio <#{current_user.email}>",
+                                     reply_to: "#{current_user.name} <#{current_user.email}>")
+
+    @email.substitute_placeholders(recipient: recipient,
+                                   author: current_user,
+                                   group: group)
+    render :show
   end
 
   controller do

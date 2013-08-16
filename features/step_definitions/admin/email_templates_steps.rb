@@ -44,7 +44,7 @@ When(/^I visit the email templates page$/) do
 end
 
 When(/^I click to preview the email template$/) do
-  click_on 'preview'
+  click_on 'View'
 end
 
 Then(/^I should see how the email template will look when sent$/) do
