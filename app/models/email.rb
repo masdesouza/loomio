@@ -1,4 +1,6 @@
 class Email < ActiveRecord::Base
+  include Routing
+
   def self.new_from_template(template, headers)
     email = new
     email.subject = template.subject
@@ -11,23 +13,42 @@ class Email < ActiveRecord::Base
   end
 
   def substitute_placeholders(substitutions)
+
+    substitutions.each_pair do |name, value|
+      self.instance_variable_set("@#{name}", value)
+    end
+
     [:body, :subject].each do |text_name|
-      text = self.send(text_name)
+      in_text = self.send(text_name)
+      out_text = in_text.dup
 
-      /{{\S}}/.match(text).to_a.each do |match|
-
-        object, method = match.split('.')
-        replacement = if method.nil?
-          # assume it is a url helper call
-          Rails.application.routes.url_helpers.send(object)
-        else
-          substitutions[object].send(method)
-        end
-
-        text.gsub!("{{#{match}}}", replacement)
+      in_text.scan(/{{(\S+)}}/) do |match|
+        code = match.first
+        replacement = eval(code)
+        out_text.gsub!("{{#{code}}}", replacement)
       end
 
-      self[text_name] = text
+      self[text_name] = out_text
     end
+  end
+
+  def render_body
+    options = {
+      :no_intra_emphasis   => true,
+      :tables              => true,
+      :fenced_code_blocks  => true,
+      :autolink            => true,
+      :strikethrough       => true,
+      :space_after_headers => true,
+      :superscript         => true,
+      :underline           => true
+    }
+
+    renderer = Redcarpet::Render::HTML.new(
+      :filter_html         => true,
+      :link_attributes     => {target: '_blank'}
+    )
+    markdown = Redcarpet::Markdown.new(renderer, options)
+    markdown.render(body)
   end
 end

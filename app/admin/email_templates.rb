@@ -28,7 +28,7 @@ ActiveAdmin.register EmailTemplate do
     @email.substitute_placeholders(recipient: recipient,
                                    author: current_user,
                                    group: group)
-    render :show
+    render template: 'admin/email_templates/show', locals: {email: @email}
   end
 
   controller do
@@ -36,4 +36,5 @@ ActiveAdmin.register EmailTemplate do
       params.permit!
     end
   end
+
 end

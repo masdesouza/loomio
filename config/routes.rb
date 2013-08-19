@@ -1,6 +1,9 @@
 Loomio::Application.routes.draw do
 
   ActiveAdmin.routes(self)
+  namespace :admin do
+    resources :emails, only: :create
+  end
 
   get "/groups", to: 'groups/public_groups#index', as: :public_groups
 

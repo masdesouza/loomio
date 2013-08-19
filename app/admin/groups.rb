@@ -38,6 +38,7 @@ ActiveAdmin.register Group do
   end
 
   index :download_links => false do
+    selectable_column
     column :id
     column :name
     column :contact do |g|
@@ -119,5 +120,11 @@ ActiveAdmin.register Group do
         @per_page = params[:pagination]
       end
     end
+  end
+
+  config.batch_actions = true
+
+  batch_action :email do | selection |
+    render template: 'admin/email_templates/email'
   end
 end

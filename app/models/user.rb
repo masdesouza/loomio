@@ -89,6 +89,10 @@ class User < ActiveRecord::Base
 
   #scope :unviewed_notifications, notifications.where('viewed_at IS NULL')
 
+  def first_name
+    name.split(' ').first
+  end
+
   # Provide can? and cannot? as methods for checking permissions
   def ability
     @ability ||= Ability.new(self)

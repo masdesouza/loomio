@@ -6,7 +6,7 @@ FactoryGirl.define do
     language 'en'
     subject 'We reckon you need to start a discussion in your group'
     body <<-body
-Hi {{recipient.first_name}},
+Hi {{@recipient.first_name}},
 ============================
 
 We're really pleased you started a loomio group, but we're sad that
@@ -20,7 +20,7 @@ Why dont you head over to the [start discussion page]({{new_discussion_path}}) a
 - list
 
 Thanks for your time
-{{author.first_name}}
+{{@author.first_name}}
 body
   end
 end

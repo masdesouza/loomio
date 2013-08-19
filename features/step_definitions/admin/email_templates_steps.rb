@@ -12,7 +12,7 @@ When(/^fill in and submit the email template form$/) do
   select 'English', from: 'Language'
   fill_in 'Subject', with: 'We reckon you need to start a discussion in your group'
   fill_in 'Body', with: <<-body
-  Hi {{recipient.first_name}},
+  Hi {{@recipient.first_name}},
   ============================
 
   We're really pleased you started a loomio group, but we're sad that
@@ -26,7 +26,7 @@ When(/^fill in and submit the email template form$/) do
   - list
 
   Thanks for your time
-  {{author.first_name}}
+  {{@author.first_name}}
   body
   click_on 'Create Email template'
 end
@@ -48,19 +48,20 @@ When(/^I click to preview the email template$/) do
 end
 
 Then(/^I should see how the email template will look when sent$/) do
-  pending # express the regexp above with the code you wish you had
+  page.should have_content("Hi Loomio")
 end
 
 Given(/^a group exists$/) do
-  pending # express the regexp above with the code you wish you had
+  @group = FactoryGirl.create :group
 end
 
 When(/^I visit the admin groups page and click email$/) do
-  pending # express the regexp above with the code you wish you had
+  visit admin_groups_url
+  click_on 'Email'
 end
 
 When(/^I choose my template and the group contact person$/) do
-  pending # express the regexp above with the code you wish you had
+  select @email_template.name, from: :groups_email_template
 end
 
 Then(/^a pending email to the group contact person, based on the template, should be created$/) do
