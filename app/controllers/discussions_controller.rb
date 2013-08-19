@@ -62,16 +62,10 @@ class DiscussionsController < GroupBaseController
   end
 
   def show
-    #@last_collaborator = User.find(@discussion.originator) if @discussion.has_previous_versions?
     @group = GroupDecorator.new(@discussion.group)
     @vote = Vote.new
     @current_motion = @discussion.current_motion
-    # can we take this first call out?
-    @activity = @discussion.activity
-
     load_cached_comment_info
-
-    @filtered_activity = @discussion.filtered_activity
     assign_meta_data
     if params[:proposal]
       @displayed_motion = Motion.find(params[:proposal])
@@ -84,6 +78,7 @@ class DiscussionsController < GroupBaseController
       ViewLogger.motion_viewed(@current_motion, current_user) if @current_motion
       @discussion.as_read_by(current_user).viewed!
     end
+    @activity = Kaminari.paginate_array(@discussion.filtered_activity).page(params[:page]).per(50)
   end
 
   def move
