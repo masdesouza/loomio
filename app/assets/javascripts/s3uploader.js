@@ -32,32 +32,22 @@ $(function() {
               form.find('input[name=signature]').val(data.signature);
             }
           })
-          // #refactor-this will be problematic if multiple files added at once
+          // #refactor - this will be problematic if multiple files added at once
           fileSize = data.files[0].size
-          fileSizeText = (fileSize >= 1048576) ? Math.round(fileSize/104858)/10 + ' MB' : Math.round(fileSize/1024) + ' kB';
+
           jqXHR = data.submit();
         }
       },
       send: function(e, data) {
-        // data.total no longer working here, moved up into the add: ^
-        // fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
         var filename = data.files[0].name;
         $('.uploading-filename').html(filename)
         $('.attachment-uploader').show()
         $('#post-new-comment').attr('disabled', 'true')
       },
       progress: function(e, data){
-        // thanks to that callback you can now update the progress bar based on the upload progress
+        // updates the progress bar based on the upload progress
         var percent = Math.round((e.loaded / e.total) * 100)
         $('.bar').css('width', percent + '%')
-
-        $('.attachment-uploader .close').click(function (e) {
-          // this cancels an upload that is underway
-          // #refactor-needs moving out of this progress section
-          jqXHR.abort();
-          $('.attachment-uploader').hide();
-          $('.bar').css('width', 0 + '%');
-        });
       },
       fail: function(e, data) {
         $('.bar').css('width', 0 + '%');
@@ -69,7 +59,6 @@ $(function() {
         var key = $(data).find('Key').text().split('/')
         var filename = key[key.length-1];
 
-
         $.ajax({
           url: "/attachments",
           type: 'POST',
@@ -79,9 +68,9 @@ $(function() {
           success: function(data) {
             // this updates the new-comment form & view with attachment info
             id = data.attachmentId
+            fileSizeText = (fileSize >= 1048576) ? Math.round(fileSize/104858)/10 + ' MB' : Math.round(fileSize/1024) + ' kB';
             $('#new-comment-form').append('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
             $('.attachments').append('<div class="attachment-success">'+'<a href='+location+' target="_blank">'+filename+'</a>'+' ('+fileSizeText+')<button id="cancel-attachment-'+id+'"" class="close">&times;</button></div>')
-
           },
           complete: function(data) {
             // console.log('fired to controller')
@@ -98,6 +87,13 @@ $(function() {
     });
   });
 
+  $(document).on('click', '.attachment-uploader .close', function (e) {
+    // this cancels an upload that is underway
+    jqXHR.abort();
+    $('.attachment-uploader').hide();
+    $('.bar').css('width', 0 + '%');
+  });
+
   $(document).on('click', '.attachment-success .close', function (e) {
     // this removes a attachment which has completed transfer and been noted in database
     var id = $(this).attr('id').split('-')[2];
@@ -108,12 +104,14 @@ $(function() {
   })
 
   $(document).on('click', '#upload-attachment', function (){
+    // #fix! - this needs disabling while there is another upload going.
     // this binds the click of attachment icon to the hidden choose file button
+    console.log(jqXHR)
+    // console.log(jqXHR.readyState)
+    // if (jqXHR != nil && jqXHR.readyState == 4) {
+    //   $('input:file').trigger('click');
+    // }
     $('input:file').trigger('click');
     return false;
   })
-
 });
-
-
-
