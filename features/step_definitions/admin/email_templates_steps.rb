@@ -69,7 +69,8 @@ When(/^I choose my template and the group contact person$/) do
 end
 
 Then(/^a pending email to the group contact person, based on the template, should be created$/) do
-  pending # express the regexp above with the code you wish you had
+  email = Email.last
+  email.to.should include @group.contact_person.name_and_email
 end
 
 Given(/^an email has been generated from a template$/) do
