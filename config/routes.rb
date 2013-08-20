@@ -177,8 +177,11 @@ Loomio::Application.routes.draw do
   get '/pages/privacy' => redirect('/privacy_policy')
   get '/pages/about' => redirect('/about#about-us')
 
-  resources :signed_urls, only: :index
-  resources :attachments, only: [:index, :create]
+  resources :attachments, only: :create do
+    collection do
+      get 'sign'
+    end
+  end
 
   get 'blog' => redirect('http://blog.loomio.org')
   get 'press' => redirect('http://blog.loomio.org/press-pack')

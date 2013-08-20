@@ -19,7 +19,7 @@ $(function() {
         }
         else {
           $.ajax({
-            url: "/signed_urls",
+            url: "/attachments/sign",
             type: 'GET',
             dataType: 'json',
             data: {doc: {title: data.files[0].name}}, // send the file name to the server so it can generate the key param
