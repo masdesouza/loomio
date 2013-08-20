@@ -29,12 +29,7 @@ Feature: Email Templates
     And I click to preview the email
     Then I should see what the email will look like to the user
 
-  Scenario: System admin edits outbound email
-    Given an email has been generated from a template
-    When I visit the outbound emails page
-    And I click to edit the email
-    Then I should see the email form with markdown preserved but placeholders replaced
-
+  @javascript
   Scenario: System admin sends outbound email
     Given an email has been generated from a template
     When I visit the outbound emails page

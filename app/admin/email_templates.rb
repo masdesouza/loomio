@@ -28,7 +28,7 @@ ActiveAdmin.register EmailTemplate do
                       author: current_user,
                       group: group } )
 
-    render template: 'admin/email_templates/show', locals: {email: email}
+    render template: 'admin/emails/show', locals: {email: email}
   end
 
   controller do

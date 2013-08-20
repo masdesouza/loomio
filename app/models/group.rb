@@ -77,6 +77,17 @@ class Group < ActiveRecord::Base
 
   paginates_per 20
 
+  def coordinators
+    admins
+  end
+
+  def contact_person
+    admins.order('id asc').first
+  end
+
+  def requestor_name_and_email
+    "#{requestor_name} <#{requestor_email}>"
+  end
 
   def requestor_name
     group_request.try(:admin_name)

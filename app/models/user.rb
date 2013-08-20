@@ -86,11 +86,16 @@ class User < ActiveRecord::Base
 
   scope :daily_activity_email_recipients, where(:subscribed_to_daily_activity_email => true)
   scope :sorted_by_name, order("lower(name)")
+  scope :admins, where(is_admin: true)
 
   #scope :unviewed_notifications, notifications.where('viewed_at IS NULL')
 
   def first_name
     name.split(' ').first
+  end
+
+  def name_and_email
+    "#{name} <#{email}>"
   end
 
   # Provide can? and cannot? as methods for checking permissions

@@ -57,7 +57,6 @@ end
 
 When(/^I visit the admin groups page and click email$/) do
   visit admin_groups_path
-  view_screenshot
   check :"batch_action_item_#{@group.id}"
   click_on 'Batch Actions'
   click_on 'Email Selected'
@@ -66,6 +65,7 @@ end
 When(/^I choose my template and the group contact person$/) do
   select @email_template.name, from: 'Email template'
   select 'contact_person', from: 'Recipients'
+  click_on 'Generate Emails'
 end
 
 Then(/^a pending email to the group contact person, based on the template, should be created$/) do
@@ -74,23 +74,35 @@ Then(/^a pending email to the group contact person, based on the template, shoul
 end
 
 Given(/^an email has been generated from a template$/) do
-  pending # express the regexp above with the code you wish you had
+  @recipient = FactoryGirl.create :user
+  author = FactoryGirl.create :user
+  group = FactoryGirl.create :group
+
+  email_template = FactoryGirl.create :email_template
+  email = email_template.generate_email(
+      headers: { to: @recipient.email,
+                 from: 'sender@loomio.org',
+                 reply_to: 'richard@loomio.org' },
+      placeholders: { recipient: @recipient,
+                      author: author,
+                      group: group})
+  email.save
 end
 
 When(/^I visit the outbound emails page$/) do
-  pending # express the regexp above with the code you wish you had
+  visit admin_emails_path
 end
 
 When(/^I click to preview the email$/) do
-  pending # express the regexp above with the code you wish you had
+  click_on 'View'
 end
 
 Then(/^I should see what the email will look like to the user$/) do
-  pending # express the regexp above with the code you wish you had
+  page.should have_content
 end
 
 When(/^I click to edit the email$/) do
-  pending # express the regexp above with the code you wish you had
+  click_on 'Edit'
 end
 
 Then(/^I should see the email form with markdown preserved but placeholders replaced$/) do
@@ -98,10 +110,13 @@ Then(/^I should see the email form with markdown preserved but placeholders repl
 end
 
 When(/^I send the email$/) do
-  pending # express the regexp above with the code you wish you had
+  check "batch_action_item_#{Email.last.id}"
+  click_on "Batch Actions"
+  click_on "Send Selected"
 end
 
 Then(/^the email should be sent to the recipient$/) do
-  pending # express the regexp above with the code you wish you had
+  open_email(@recipient.email, :with_subject => "We reckon you need to start a discussion in your group")
+  current_email.default_part_body.to_s.should include("We're really pleased you started a loomio group")
 end
 

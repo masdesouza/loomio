@@ -124,8 +124,7 @@ ActiveAdmin.register Group do
 
   config.batch_actions = true
 
-  batch_action :email do | selection |
-    @email_groups_form = EmailGroupsForm.new(selection)
-    render template: 'admin/email_templates/email'
+  batch_action :email do |group_ids|
+    redirect_to new_admin_email_groups_path(group_ids: group_ids)
   end
 end

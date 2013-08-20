@@ -24,7 +24,11 @@ class EmailTemplate < ActiveRecord::Base
 
     in_text.scan(/{{(\S+)}}/) do |match|
       code = match.first
-      replacement = eval(code)
+      begin
+        replacement = eval(code)
+      rescue
+        raise "failed to evaluate: #{code}"
+      end
       out_text.gsub!("{{#{code}}}", replacement)
     end
 
