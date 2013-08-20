@@ -2,6 +2,7 @@ $(function() {
 
   var jqXHR;
   var fileSize;
+  var fileSizeText;
 
  $('.direct-upload').each(function() {
 
@@ -13,7 +14,7 @@ $(function() {
       autoUpload: true,
       dataType: 'xml', // This is really important as s3 gives us back the url of the file in a XML document
       add: function (event, data) {
-        if (data.files[0].size >= 52428800) { // note 50MB limit is duplicated in the sign_urls_controller
+        if (data.files[0].size >= 52428800) { // note- 50MB limit is duplicated in the sign_urls_controller
           alert( $('.attachment-too-large-error-message').html() )
         }
         else {
@@ -31,28 +32,28 @@ $(function() {
               form.find('input[name=signature]').val(data.signature);
             }
           })
-          // console.log(data)
+          // #refactor-this will be problematic if multiple files added at once
+          fileSize = data.files[0].size
+          fileSizeText = (size >= 1048576) ? Math.round(size/104858)/10 + ' MB' : Math.round(size/1024) + ' kB';
           jqXHR = data.submit();
         }
       },
       send: function(e, data) {
-        // console.log(data)
-        fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
+        // data.total no longer working here, moved up into the add: ^
+        // fileSize = (data.total >= 1048576) ? Math.round(data.total/104858)/10 + ' MB' : Math.round(data.total/1024) + ' kB';
         var filename = data.files[0].name;
         $('.uploading-filename').html(filename)
         $('.attachment-uploader').show()
         $('#post-new-comment').attr('disabled', 'true')
-
-        // $('.progress').fadeIn();
       },
       progress: function(e, data){
-        // This is what makes everything really cool, thanks to that callback
-        // you can now update the progress bar based on the upload progress
+        // thanks to that callback you can now update the progress bar based on the upload progress
         var percent = Math.round((e.loaded / e.total) * 100)
         $('.bar').css('width', percent + '%')
 
         $('.attachment-uploader .close').click(function (e) {
-          // this cancles an upload that is underway
+          // this cancels an upload that is underway
+          // #refactor-needs moving out of this progress section
           jqXHR.abort();
           $('.attachment-uploader').hide();
           $('.bar').css('width', 0 + '%');
@@ -76,12 +77,10 @@ $(function() {
           data: {filename: filename, location: location, filesize: fileSize}, // send the file name to the server so it can generate the key param
           async: false,
           success: function(data) {
-            // Now that we have our data, we update the form so it contains all
-            // the needed data to sign the request
-
+            // this updates the new-comment form & view with attachment info
             id = data.attachmentId
             $('#new-comment-form').append('<input type="hidden" id="comment-attachment-'+id+'" name="attachments[]" value="'+id+'">')
-            $('.attachments').append('<div class="attachment-success">'+'<a href='+location+' target="_blank">'+filename+'</a>'+' ('+fileSize+')<button id="cancel-attachment-'+id+'"" class="close">&times;</button></div>')
+            $('.attachments').append('<div class="attachment-success">'+'<a href='+location+' target="_blank">'+filename+'</a>'+' ('+fileSizeText+')<button id="cancel-attachment-'+id+'"" class="close">&times;</button></div>')
 
           },
           complete: function(data) {
@@ -95,9 +94,6 @@ $(function() {
       done: function (event, data) {
         $('.attachment-uploader').hide();
         $('.bar').css('width', 0 + '%');
-      //   $('.progress').fadeOut(300, function() {
-      //     $('.bar').css('width', 0)
-      //   })
       }
     });
   });
