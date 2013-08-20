@@ -2,6 +2,16 @@ class EmailGroupsForm
   extend ActiveModel::Naming
   include ActiveModel::Conversion
   include ActiveModel::Validations
+  RECIPIENTS_OPTIONS = [:contact_person, :coordinators, :members]
+
+  attr_accessor :recipients
+  attr_accessor :email_template_id
+  validates_inclusion_of :recipients, in: RECIPIENTS_OPTIONS
+
+
+  def initialize(group_ids)
+    @group_ids = group_ids
+  end
 
   def persisted?
     false
@@ -26,7 +36,7 @@ class EmailGroupsForm
         end
 
         sender = "#{current_user.name} <#{current_user.email}>"
-        reply_to = "#{parms[:reply_to_name]} <#{params[:reply_to_email}>"
+        reply_to = "#{params[:reply_to_name]} <#{params[:reply_to_email]}>"
         Email.new_from_template(email_template, to: recipient_names_and_emails,
                                                 from: sender,
                                                 reply_to: reply_to)

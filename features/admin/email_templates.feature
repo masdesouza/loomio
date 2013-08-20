@@ -15,6 +15,7 @@ Feature: Email Templates
     And I click to preview the email template
     Then I should see how the email template will look when sent
 
+  @javascript
   Scenario: System admin uses template to generate emails to group members
     Given there is an email template
     And a group exists

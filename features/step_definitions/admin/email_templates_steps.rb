@@ -56,12 +56,16 @@ Given(/^a group exists$/) do
 end
 
 When(/^I visit the admin groups page and click email$/) do
-  visit admin_groups_url
-  click_on 'Email'
+  visit admin_groups_path
+  view_screenshot
+  check :"batch_action_item_#{@group.id}"
+  click_on 'Batch Actions'
+  click_on 'Email Selected'
 end
 
 When(/^I choose my template and the group contact person$/) do
-  select @email_template.name, from: :groups_email_template
+  select @email_template.name, from: 'Email template'
+  select 'contact_person', from: 'Recipients'
 end
 
 Then(/^a pending email to the group contact person, based on the template, should be created$/) do

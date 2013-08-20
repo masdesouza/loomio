@@ -20,15 +20,15 @@ ActiveAdmin.register EmailTemplate do
     recipient = User.loomio_helper_bot
     group = Group.find_by_name('Loomio Community')
 
-    @email = Email.new_from_template(template,
-                                     to: "#{recipient.name} <#{recipient.email}>",
-                                     from: "#{current_user.name} via Loomio <#{current_user.email}>",
-                                     reply_to: "#{current_user.name} <#{current_user.email}>")
+    email = email_template.generate_email(
+      headers: { to: "#{recipient.name} <#{recipient.email}>",
+                 from: "#{current_user.name} via Loomio <#{current_user.email}>",
+                 reply_to: "#{current_user.name} <#{current_user.email}>"},
+      placeholders: { recipient: recipient,
+                      author: current_user,
+                      group: group } )
 
-    @email.substitute_placeholders(recipient: recipient,
-                                   author: current_user,
-                                   group: group)
-    render template: 'admin/email_templates/show', locals: {email: @email}
+    render template: 'admin/email_templates/show', locals: {email: email}
   end
 
   controller do

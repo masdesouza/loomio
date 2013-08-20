@@ -1,4 +1,4 @@
 =simple_form_for @email_groups_form, url: admin_emails_path do |f|
-  = f.select :recipients
-  = f.select :email_template
-  = f.actions
+  = f.input :recipients, as: :select, collection: EmailGroupsForm::RECIPIENTS_OPTIONS
+  = f.input :email_template_id, as: :select,  collection: EmailTemplate.all
+  = f.submit
