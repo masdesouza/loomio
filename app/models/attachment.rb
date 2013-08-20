@@ -1,5 +1,5 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :filename, :location
+  attr_accessible :filename, :location, :filesize
 
   belongs_to :user
   belongs_to :comment

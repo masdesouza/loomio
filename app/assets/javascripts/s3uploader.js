@@ -34,7 +34,7 @@ $(function() {
           })
           // #refactor-this will be problematic if multiple files added at once
           fileSize = data.files[0].size
-          fileSizeText = (size >= 1048576) ? Math.round(size/104858)/10 + ' MB' : Math.round(size/1024) + ' kB';
+          fileSizeText = (fileSize >= 1048576) ? Math.round(fileSize/104858)/10 + ' MB' : Math.round(fileSize/1024) + ' kB';
           jqXHR = data.submit();
         }
       },

@@ -10,5 +10,7 @@
       .comment-attachment
         %img{src: '/assets/paperclip22.png'}
         =link_to a.filename, a.location, { target: 'blank' }
+        -fileSizeText = (a.filesize >= 1048576) ? (a.filesize/1048576.0).round(1).to_s + ' MB' : (a.filesize/1024.0).round.to_s + ' kB';
+        ="("+fileSizeText+")"
     .comment-time-and-likes
       =render 'comments/comment_likes', comment: comment
