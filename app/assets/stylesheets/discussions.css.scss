@@ -64,10 +64,11 @@ body.discussions.show {
   }
   .comment-attachment {
     font-size: .9em;
+    color: $mid-grey;
     padding: 6px;
     background: #EBEBEB;
     margin: 5px 0;
-      img {
+      img { // #refactor - note this looks horrible in IE. consider using a different image manually rotated
         width: 15px;
         height: 15px;
         behavior:url(-ms-transform.htc);
